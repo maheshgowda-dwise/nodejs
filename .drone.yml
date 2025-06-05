@@ -3,7 +3,7 @@ type: docker
 name: nodejs-hello-world
 steps:
   - name: build image
-    image: plugin/docker
+    image: plugins/docker
     settings:
       username:
         from_secret: docker_username
