@@ -1,0 +1,36 @@
+kind: pipeline
+type: docker
+name: nodejs-hello-world
+steps:
+  - name: build image
+    image: plugin/docker
+    settings:
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      repo: maheshgowdamg25/node-hello
+      tag:
+      - ${DRONE_COMMIT_SHA}
+      
+  - name: run-container
+    image: docker
+    commands:
+     - docker rm -f node-hello || true
+     - docker run -d --name node-hello -p 8080:8080 maheshgowdamg25/node-hello:${DRONE_COMMIT_SHA}
+
+    volumes:
+    - name: dockersock
+      path: /var/run/docker.sock
+
+volumes:
+- name: dockersock
+  host:
+    path: /var/run/docker.sock
+
+trigger:
+  event: 
+  - push
+
+        
+      
